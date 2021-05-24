@@ -1,7 +1,3 @@
-/**
- *Submitted for verification at Etherscan.io on 2021-03-17
-*/
-
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
@@ -501,6 +497,7 @@ contract RCG is ERC20 {
     require(amount != 0);
     require(amount <= _balances[account]);
     _balances[account] = _balances[account].sub(amount);
+    _totalSupply = _totalSupply.sub(amount);
     emit Transfer(account, address(0), amount);
   }
 
