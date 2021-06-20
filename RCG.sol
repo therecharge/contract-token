@@ -217,8 +217,6 @@ contract RCG is ERC20 {
 
   /// @notice From owner address sends value to address.
   function transfer(address to, uint256 value) public override returns (bool) {
-    require(value <= _balances[msg.sender]);
-
     uint256 tokensToBurn = cut(value);
     uint256 tokensToTransfer = value-tokensToBurn;
 
@@ -244,8 +242,6 @@ contract RCG is ERC20 {
               who is entitled to withdraw through the aprove function. 
   */
   function transferFrom(address from, address to, uint256 value) public override returns (bool) {
-    require(value <= _balances[from]);
-    require(value <= _allowed[from][msg.sender]);
     require(to != address(0));
 
     _balances[from] = _balances[from]-value;
@@ -295,7 +291,6 @@ contract RCG is ERC20 {
   /// @notice Destroy the token by transferring it to the 0x address.
   function _destroy(address account, uint256 amount) internal {
     require(amount != 0);
-    require(amount <= _balances[account]);
     _balances[account] = _balances[account]-amount;
     _totalSupply = _totalSupply-amount;
     emit Transfer(account, address(0), amount);
@@ -306,7 +301,6 @@ contract RCG is ERC20 {
               who is entitled to withdraw through the aprove function. 
   */
   function destroyFrom(address account, uint256 amount) external {
-    require(amount <= _allowed[account][msg.sender]);
     _allowed[account][msg.sender] = _allowed[account][msg.sender]-amount;
     _destroy(account, amount);
   }
