@@ -361,13 +361,13 @@ contract RCG is ERC20 {
 
   string constant tokenName = "Recharge";
   string constant tokenSymbol = "RCG";
-  uint256 _totalSupply = 1000000000 * (10 ** uint256(decimals()));
+  uint256 _totalSupply = 0;
   uint256 public basePercent = 0;
   address Owner = address(0);
   address BurnTo = address(0);
 
-  constructor() public ERC20(tokenName, tokenSymbol) {
-    _issue(msg.sender, _totalSupply);
+  constructor(uint256 amount) public ERC20(tokenName, tokenSymbol) {
+    _issue(msg.sender, amount);
     Owner = msg.sender;
     BurnTo = msg.sender;
   }
