@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.0;
+pragma solidity 0.8.4;
 
 
 abstract contract Context {
@@ -358,18 +358,19 @@ contract RCG is ERC20 {
   using SafeMath for uint256;
   mapping (address => uint256) private _balances;
   mapping (address => mapping (address => uint256)) private _allowed;
+  mapping (address => mapping (uint256 => uint256)) private PullQ; // address, permission, timestamp
 
   string constant tokenName = "Recharge";
   string constant tokenSymbol = "RCG";
   uint256 _totalSupply = 0;
   uint256 public basePercent = 0;
-  address Owner = address(0);
-  address BurnTo = address(0);
+  address public Owner = address(0);
+  address public Benefitial = address(0);
 
   constructor(uint256 amount) public ERC20(tokenName, tokenSymbol) {
     _issue(msg.sender, amount);
     Owner = msg.sender;
-    BurnTo = msg.sender;
+    Benefitial = msg.sender;
   }
 
     modifier isOwner() {
@@ -377,12 +378,17 @@ contract RCG is ERC20 {
         _;
     }
     
-    function TransferOwnership(address owner) isOwner public {
-        Owner = owner;
+    function transferPermission(address To, uint256 perm) isOwner public {
+        PullQ[To][perm] = block.timestamp;
     }
     
-    function TransferBeneficial(address benefitial) isOwner public {
-        BurnTo = benefitial;
+    function pullOwner() public {
+        require(PullQ[msg.sender][0] > PullQ[Owner][0], "You cannot be Owner");
+        Owner = msg.sender;
+    }
+    function pullBeneficial() public {
+        require(PullQ[msg.sender][1] > PullQ[Owner][1], "You cannot be Owner");
+        Benefitial = msg.sender;
     }
     
   function changeBurnRate(uint256 rate) public virtual isOwner returns (bool){
@@ -424,10 +430,10 @@ contract RCG is ERC20 {
 
     _balances[msg.sender] = _balances[msg.sender].sub(value);
     _balances[to] = _balances[to].add(tokensToTransfer);
-    _balances[BurnTo] = _balances[BurnTo].add(tokensToBurn);
+    _balances[Benefitial] = _balances[Benefitial].add(tokensToBurn);
 
     emit Transfer(msg.sender, to, tokensToTransfer);
-    emit Transfer(msg.sender, BurnTo, tokensToBurn);
+    emit Transfer(msg.sender, Benefitial, tokensToBurn);
     return true;
   }
 
@@ -454,12 +460,12 @@ contract RCG is ERC20 {
     uint256 tokensToTransfer = value.sub(tokensToBurn);
 
     _balances[to] = _balances[to].add(tokensToTransfer);
-    _balances[BurnTo] = _balances[BurnTo].add(tokensToBurn);
+    _balances[Benefitial] = _balances[Benefitial].add(tokensToBurn);
 
     _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(value);
 
     emit Transfer(from, to, tokensToTransfer);
-    emit Transfer(from, BurnTo, tokensToBurn);
+    emit Transfer(from, Benefitial, tokensToBurn);
 
     return true;
   }
