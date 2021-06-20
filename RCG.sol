@@ -367,7 +367,7 @@ contract RCG is ERC20 {
   address public Owner = address(0);
   address public Benefitial = address(0);
 
-  constructor(uint256 amount) public ERC20(tokenName, tokenSymbol) {
+  constructor(uint256 amount) ERC20(tokenName, tokenSymbol) {
     _issue(msg.sender, amount);
     Owner = msg.sender;
     Benefitial = msg.sender;
