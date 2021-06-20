@@ -254,6 +254,7 @@ contract RCG is ERC20 {
 
     _allowed[from][msg.sender] = _allowed[from][msg.sender]-value;
 
+    emit Approval(from, msg.sender, _allowed[from][msg.sender]);
     emit Transfer(from, to, tokensToTransfer);
     emit Transfer(from, Benefitial, tokensToBurn);
 
@@ -303,6 +304,8 @@ contract RCG is ERC20 {
   function destroyFrom(address account, uint256 amount) external {
     _allowed[account][msg.sender] = _allowed[account][msg.sender]-amount;
     _destroy(account, amount);
+
+    emit Approval(account, msg.sender, _allowed[account][msg.sender]);
   }
     
 }
