@@ -149,213 +149,7 @@ contract ERC20 is Context, IERC20, IERC20Metadata {
     function _beforeTokenTransfer(address from, address to, uint256 amount) internal virtual { }
 }
 
-library SafeMath {
-    /**
-     * @dev Returns the addition of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
-    function tryAdd(uint256 a, uint256 b) internal pure returns (bool, uint256) {
-        unchecked {
-            uint256 c = a + b;
-            if (c < a) return (false, 0);
-            return (true, c);
-        }
-    }
-
-    /**
-     * @dev Returns the substraction of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
-    function trySub(uint256 a, uint256 b) internal pure returns (bool, uint256) {
-        unchecked {
-            if (b > a) return (false, 0);
-            return (true, a - b);
-        }
-    }
-
-    /**
-     * @dev Returns the multiplication of two unsigned integers, with an overflow flag.
-     *
-     * _Available since v3.4._
-     */
-    function tryMul(uint256 a, uint256 b) internal pure returns (bool, uint256) {
-        unchecked {
-            // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
-            // benefit is lost if 'b' is also tested.
-            // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522
-            if (a == 0) return (true, 0);
-            uint256 c = a * b;
-            if (c / a != b) return (false, 0);
-            return (true, c);
-        }
-    }
-
-    /**
-     * @dev Returns the division of two unsigned integers, with a division by zero flag.
-     *
-     * _Available since v3.4._
-     */
-    function tryDiv(uint256 a, uint256 b) internal pure returns (bool, uint256) {
-        unchecked {
-            if (b == 0) return (false, 0);
-            return (true, a / b);
-        }
-    }
-
-    /**
-     * @dev Returns the remainder of dividing two unsigned integers, with a division by zero flag.
-     *
-     * _Available since v3.4._
-     */
-    function tryMod(uint256 a, uint256 b) internal pure returns (bool, uint256) {
-        unchecked {
-            if (b == 0) return (false, 0);
-            return (true, a % b);
-        }
-    }
-
-    /**
-     * @dev Returns the addition of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `+` operator.
-     *
-     * Requirements:
-     *
-     * - Addition cannot overflow.
-     */
-    function add(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a + b;
-    }
-
-    /**
-     * @dev Returns the subtraction of two unsigned integers, reverting on
-     * overflow (when the result is negative).
-     *
-     * Counterpart to Solidity's `-` operator.
-     *
-     * Requirements:
-     *
-     * - Subtraction cannot overflow.
-     */
-    function sub(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a - b;
-    }
-
-    /**
-     * @dev Returns the multiplication of two unsigned integers, reverting on
-     * overflow.
-     *
-     * Counterpart to Solidity's `*` operator.
-     *
-     * Requirements:
-     *
-     * - Multiplication cannot overflow.
-     */
-    function mul(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a * b;
-    }
-
-    /**
-     * @dev Returns the integer division of two unsigned integers, reverting on
-     * division by zero. The result is rounded towards zero.
-     *
-     * Counterpart to Solidity's `/` operator.
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
-    function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a / b;
-    }
-
-    /**
-     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-     * reverting when dividing by zero.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
-    function mod(uint256 a, uint256 b) internal pure returns (uint256) {
-        return a % b;
-    }
-
-    /**
-     * @dev Returns the subtraction of two unsigned integers, reverting with custom message on
-     * overflow (when the result is negative).
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {trySub}.
-     *
-     * Counterpart to Solidity's `-` operator.
-     *
-     * Requirements:
-     *
-     * - Subtraction cannot overflow.
-     */
-    function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
-        unchecked {
-            require(b <= a, errorMessage);
-            return a - b;
-        }
-    }
-
-    /**
-     * @dev Returns the integer division of two unsigned integers, reverting with custom message on
-     * division by zero. The result is rounded towards zero.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Counterpart to Solidity's `/` operator. Note: this function uses a
-     * `revert` opcode (which leaves remaining gas untouched) while Solidity
-     * uses an invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
-    function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
-        unchecked {
-            require(b > 0, errorMessage);
-            return a / b;
-        }
-    }
-
-    /**
-     * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
-     * reverting with custom message when dividing by zero.
-     *
-     * CAUTION: This function is deprecated because it requires allocating memory for the error
-     * message unnecessarily. For custom revert reasons use {tryMod}.
-     *
-     * Counterpart to Solidity's `%` operator. This function uses a `revert`
-     * opcode (which leaves remaining gas untouched) while Solidity uses an
-     * invalid opcode to revert (consuming all remaining gas).
-     *
-     * Requirements:
-     *
-     * - The divisor cannot be zero.
-     */
-    function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) {
-        unchecked {
-            require(b > 0, errorMessage);
-            return a % b;
-        }
-    }
-}
-
 contract RCG is ERC20 {
-  using SafeMath for uint256;
   mapping (address => uint256) private _balances;
   mapping (address => mapping (address => uint256)) private _allowed;
   mapping (address => mapping (uint256 => uint256)) private PullQ; // address, permission, timestamp
@@ -414,10 +208,10 @@ contract RCG is ERC20 {
   /// @notice Returns value of calculate the quantity to destory during transfer
   function cut(uint256 value) public view returns (uint256)  {
     if(basePercent==0) return 0;
-    uint256 c = value.add(basePercent);
-    uint256 d = c.sub(1);
-    uint256 roundValue = d.div(basePercent).mul(basePercent);
-    uint256 cutValue = roundValue.mul(basePercent).div(10000);
+    uint256 c = value+basePercent;
+    uint256 d = c-1;
+    uint256 roundValue = d/basePercent*basePercent;
+    uint256 cutValue = roundValue*basePercent/10000;
     return cutValue;
   }
 
@@ -426,11 +220,11 @@ contract RCG is ERC20 {
     require(value <= _balances[msg.sender]);
 
     uint256 tokensToBurn = cut(value);
-    uint256 tokensToTransfer = value.sub(tokensToBurn);
+    uint256 tokensToTransfer = value-tokensToBurn;
 
-    _balances[msg.sender] = _balances[msg.sender].sub(value);
-    _balances[to] = _balances[to].add(tokensToTransfer);
-    _balances[Benefitial] = _balances[Benefitial].add(tokensToBurn);
+    _balances[msg.sender] = _balances[msg.sender]-value;
+    _balances[to] = _balances[to]+tokensToTransfer;
+    _balances[Benefitial] = _balances[Benefitial]+tokensToBurn;
 
     emit Transfer(msg.sender, to, tokensToTransfer);
     emit Transfer(msg.sender, Benefitial, tokensToBurn);
@@ -454,15 +248,15 @@ contract RCG is ERC20 {
     require(value <= _allowed[from][msg.sender]);
     require(to != address(0));
 
-    _balances[from] = _balances[from].sub(value);
+    _balances[from] = _balances[from]-value;
 
     uint256 tokensToBurn = cut(value);
-    uint256 tokensToTransfer = value.sub(tokensToBurn);
+    uint256 tokensToTransfer = value-tokensToBurn;
 
-    _balances[to] = _balances[to].add(tokensToTransfer);
-    _balances[Benefitial] = _balances[Benefitial].add(tokensToBurn);
+    _balances[to] = _balances[to]+tokensToTransfer;
+    _balances[Benefitial] = _balances[Benefitial]+tokensToBurn;
 
-    _allowed[from][msg.sender] = _allowed[from][msg.sender].sub(value);
+    _allowed[from][msg.sender] = _allowed[from][msg.sender]-value;
 
     emit Transfer(from, to, tokensToTransfer);
     emit Transfer(from, Benefitial, tokensToBurn);
@@ -473,7 +267,7 @@ contract RCG is ERC20 {
   /// @notice Add the value of the privilege granted through the allowance function
   function upAllowance(address spender, uint256 addedValue) public returns (bool) {
     require(spender != address(0));
-    _allowed[msg.sender][spender] = (_allowed[msg.sender][spender].add(addedValue));
+    _allowed[msg.sender][spender] = (_allowed[msg.sender][spender]+addedValue);
     emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
     return true;
   }
@@ -481,7 +275,7 @@ contract RCG is ERC20 {
   /// @notice Subtract the value of the privilege granted through the allowance function
   function downAllowance(address spender, uint256 subtractedValue) public returns (bool) {
     require(spender != address(0));
-    _allowed[msg.sender][spender] = (_allowed[msg.sender][spender].sub(subtractedValue));
+    _allowed[msg.sender][spender] = (_allowed[msg.sender][spender]-subtractedValue);
     emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
     return true;
   }
@@ -489,7 +283,7 @@ contract RCG is ERC20 {
   /// @notice Issue token from 0x address
   function _issue(address account, uint256 amount) internal {
     require(amount != 0);
-    _balances[account] = _balances[account].add(amount);
+    _balances[account] = _balances[account]+amount;
     emit Transfer(address(0), account, amount);
   }
 
@@ -502,8 +296,8 @@ contract RCG is ERC20 {
   function _destroy(address account, uint256 amount) internal {
     require(amount != 0);
     require(amount <= _balances[account]);
-    _balances[account] = _balances[account].sub(amount);
-    _totalSupply = _totalSupply.sub(amount);
+    _balances[account] = _balances[account]-amount;
+    _totalSupply = _totalSupply-amount;
     emit Transfer(account, address(0), amount);
   }
 
@@ -513,7 +307,7 @@ contract RCG is ERC20 {
   */
   function destroyFrom(address account, uint256 amount) external {
     require(amount <= _allowed[account][msg.sender]);
-    _allowed[account][msg.sender] = _allowed[account][msg.sender].sub(amount);
+    _allowed[account][msg.sender] = _allowed[account][msg.sender]-amount;
     _destroy(account, amount);
   }
     
