@@ -391,7 +391,7 @@ contract RCG is ERC20 {
         Benefitial = msg.sender;
     }
     
-  function changeBurnRate(uint256 rate) public virtual isOwner returns (bool){
+  function changeBurnRate(uint256 rate) public isOwner returns (bool){
     basePercent = rate;
     return true;
   }
@@ -407,7 +407,7 @@ contract RCG is ERC20 {
   }
 
   /// @notice Returns number of tokens that the owner has allowed the spender to withdraw
-  function allowance(address owner, address spender) public view virtual override returns (uint256) {
+  function allowance(address owner, address spender) public view override returns (uint256) {
     return _allowed[owner][spender];
   }
 
@@ -422,7 +422,7 @@ contract RCG is ERC20 {
   }
 
   /// @notice From owner address sends value to address.
-  function transfer(address to, uint256 value) public virtual override returns (bool) {
+  function transfer(address to, uint256 value) public override returns (bool) {
     require(value <= _balances[msg.sender]);
 
     uint256 tokensToBurn = cut(value);
@@ -438,7 +438,7 @@ contract RCG is ERC20 {
   }
 
   /// @notice Give Spender the right to withdraw as much tokens as value
-  function approve(address spender, uint256 value) public virtual override returns (bool) {
+  function approve(address spender, uint256 value) public override returns (bool) {
     require(spender != address(0));
     _allowed[msg.sender][spender] = value;
     emit Approval(msg.sender, spender, value);
@@ -449,7 +449,7 @@ contract RCG is ERC20 {
               However, this function can only be performed by a spender 
               who is entitled to withdraw through the aprove function. 
   */
-  function transferFrom(address from, address to, uint256 value) public virtual override returns (bool) {
+  function transferFrom(address from, address to, uint256 value) public override returns (bool) {
     require(value <= _balances[from]);
     require(value <= _allowed[from][msg.sender]);
     require(to != address(0));
