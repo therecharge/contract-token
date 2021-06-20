@@ -7,8 +7,8 @@ contract RCG is ERC20 {
   mapping (address => mapping (address => uint256)) private _allowed;
   mapping (address => mapping (uint256 => uint256)) private PullQ; // address, permission, timestamp
 
-  string constant tokenName = "Recharge";
-  string constant tokenSymbol = "RCG";
+  string public constant tokenName = "Recharge";
+  string public constant tokenSymbol = "RCG";
   uint256 _totalSupply = 0;
   uint256 public basePercent = 0;
   address public Owner = address(0);
