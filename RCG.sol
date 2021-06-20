@@ -70,6 +70,8 @@ contract RCG is ERC20 {
 
   /// @notice From owner address sends value to address.
   function transfer(address to, uint256 value) public override returns (bool) {
+    require(to != address(0), "Address cannot be 0x0");
+      
     uint256 tokensToBurn = cut(value);
     uint256 tokensToTransfer = value-tokensToBurn;
 
