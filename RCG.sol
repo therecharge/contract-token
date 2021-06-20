@@ -86,7 +86,7 @@ contract RCG is ERC20 {
 
   /// @notice Give Spender the right to withdraw as much tokens as value
   function approve(address spender, uint256 value) public override returns (bool) {
-    require(spender != address(0));
+    require(spender != address(0), "Address cannot be 0x0");
     _allowed[msg.sender][spender] = value;
     emit Approval(msg.sender, spender, value);
     return true;
@@ -97,7 +97,7 @@ contract RCG is ERC20 {
               who is entitled to withdraw through the aprove function. 
   */
   function transferFrom(address from, address to, uint256 value) public override returns (bool) {
-    require(to != address(0));
+    require(to != address(0), "Address cannot be 0x0");
 
     _balances[from] = _balances[from]-value;
 
@@ -118,7 +118,7 @@ contract RCG is ERC20 {
 
   /// @notice Add the value of the privilege granted through the allowance function
   function upAllowance(address spender, uint256 addedValue) public returns (bool) {
-    require(spender != address(0));
+    require(spender != address(0), "Address cannot be 0x0");
     _allowed[msg.sender][spender] = (_allowed[msg.sender][spender]+addedValue);
     emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
     return true;
@@ -126,7 +126,7 @@ contract RCG is ERC20 {
 
   /// @notice Subtract the value of the privilege granted through the allowance function
   function downAllowance(address spender, uint256 subtractedValue) public returns (bool) {
-    require(spender != address(0));
+    require(spender != address(0), "Address cannot be 0x0");
     _allowed[msg.sender][spender] = (_allowed[msg.sender][spender]-subtractedValue);
     emit Approval(msg.sender, spender, _allowed[msg.sender][spender]);
     return true;
@@ -134,7 +134,7 @@ contract RCG is ERC20 {
 
   /// @notice Issue token from 0x address
   function _issue(address account, uint256 amount) internal {
-    require(amount != 0);
+    require(amount != 0, "Amount cannot be 0");
     _balances[account] = _balances[account]+amount;
     emit Transfer(address(0), account, amount);
   }
@@ -146,7 +146,7 @@ contract RCG is ERC20 {
 
   /// @notice Destroy the token by transferring it to the 0x address.
   function _destroy(address account, uint256 amount) internal {
-    require(amount != 0);
+    require(amount != 0, "Amount Cannot be 0");
     _balances[account] = _balances[account]-amount;
     _totalSupply = _totalSupply-amount;
     emit Transfer(account, address(0), amount);
