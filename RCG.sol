@@ -40,7 +40,6 @@ contract Owned {
 contract RCG is ERC20, Owned {
   mapping (address => uint256) private _balances;
   mapping (address => mapping (address => uint256)) private _allowed;
-  mapping (address => mapping (uint256 => uint256)) private PullQ; // address, permission, timestamp
 
   string public constant tokenName = "Recharge";
   string public constant tokenSymbol = "RCG";
