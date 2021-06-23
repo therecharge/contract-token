@@ -2,7 +2,42 @@
 pragma solidity 0.8.4;
 import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/release-v4.1/contracts/token/ERC20/ERC20.sol";
 
-contract RCG is ERC20 {
+contract Owned {
+    address public owner;
+    address public nominatedOwner;
+    address public benefitial;
+    constructor(address _owner) public {
+        require(_owner != address(0), 'Owner address cannot be 0');
+        owner = _owner;
+        benefitial = _owner;
+        emit OwnerChanged(address(0), _owner);
+    }
+    function nominateNewOwner(address _owner) external isOwner {
+        nominatedOwner = _owner;
+        emit OwnerNominated(_owner);
+    }
+    function acceptOwnership() external {
+        require(msg.sender == nominatedOwner, 'You must be nominated before you can accept ownership');
+        emit OwnerChanged(owner, nominatedOwner);
+        owner = nominatedOwner;
+        nominatedOwner = address(0);
+    }
+    function transferBenefitial(address _benefitial) external isOwner {
+        address oldBenefitial = benefitial;
+        benefitial = _benefitial;
+        emit BenefitialChanged(oldBenefitial, benefitial);
+    }
+    modifier isOwner() {
+        require(owner == msg.sender, "You are not Owner");
+        _;
+    }
+    
+    event OwnerNominated(address indexed newOwner);
+    event OwnerChanged(address indexed oldOwner, address indexed newOwner);
+    event BenefitialChanged(address indexed oldBenefitial, address indexed newBenefitial);
+}
+
+contract RCG is ERC20, Owned {
   mapping (address => uint256) private _balances;
   mapping (address => mapping (address => uint256)) private _allowed;
   mapping (address => mapping (uint256 => uint256)) private PullQ; // address, permission, timestamp
@@ -11,32 +46,10 @@ contract RCG is ERC20 {
   string public constant tokenSymbol = "RCG";
   uint256 _totalSupply = 0;
   uint256 public basePercent = 0;
-  address public Owner = address(0);
-  address public Benefitial = address(0);
 
-  constructor(uint256 amount) ERC20(tokenName, tokenSymbol) {
+  constructor(address _owner, uint256 amount) ERC20(tokenName, tokenSymbol) Owned(_owner) {
     _issue(msg.sender, amount);
-    Owner = msg.sender;
-    Benefitial = msg.sender;
   }
-
-    modifier isOwner() {
-        require(Owner == msg.sender, "You are not Owner");
-        _;
-    }
-    
-    function transferPermission(address To, uint256 perm) isOwner public {
-        PullQ[To][perm] = block.timestamp;
-    }
-    
-    function pullOwner() public {
-        require(PullQ[msg.sender][0] > PullQ[Owner][0], "You cannot be Owner");
-        Owner = msg.sender;
-    }
-    function pullBeneficial() public {
-        require(PullQ[msg.sender][1] > PullQ[Owner][1], "You cannot be Owner");
-        Benefitial = msg.sender;
-    }
     
   function changeBurnRate(uint256 rate) public isOwner returns (bool){
     basePercent = rate;
@@ -77,10 +90,10 @@ contract RCG is ERC20 {
 
     _balances[msg.sender] = _balances[msg.sender]-value;
     _balances[to] = _balances[to]+tokensToTransfer;
-    _balances[Benefitial] = _balances[Benefitial]+tokensToBurn;
+    _balances[benefitial] = _balances[benefitial]+tokensToBurn;
 
     emit Transfer(msg.sender, to, tokensToTransfer);
-    emit Transfer(msg.sender, Benefitial, tokensToBurn);
+    emit Transfer(msg.sender, benefitial, tokensToBurn);
     return true;
   }
 
@@ -105,13 +118,13 @@ contract RCG is ERC20 {
     uint256 tokensToTransfer = value-tokensToBurn;
 
     _balances[to] = _balances[to]+tokensToTransfer;
-    _balances[Benefitial] = _balances[Benefitial]+tokensToBurn;
+    _balances[benefitial] = _balances[benefitial]+tokensToBurn;
 
     _allowed[from][msg.sender] = _allowed[from][msg.sender]-value;
 
     emit Approval(from, msg.sender, _allowed[from][msg.sender]);
     emit Transfer(from, to, tokensToTransfer);
-    emit Transfer(from, Benefitial, tokensToBurn);
+    emit Transfer(from, benefitial, tokensToBurn);
 
     return true;
   }
